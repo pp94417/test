@@ -12,7 +12,7 @@
 */
 
 //首頁
-Route::get('/', 'Controller@indexPage');
+//Route::get('/', 'Controller@indexPage');
 
 //使用者
 Route::group(['prefix' => 'user'], function(){
@@ -63,3 +63,8 @@ Route::group(['prefix' => 'merchandise'], function(){
 
 //交易
 Route::get('/transaction', 'TransactionController@transactionListPage');//->middleware(['user.auth']);
+
+
+//JSON
+Route::get('/json', 'jsonController@test');
+Route::get('/json/1', 'jsonController@test1');

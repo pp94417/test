@@ -11,6 +11,7 @@ use Mail;
 use Socialite;
 use App\Jobs\SendSignUpMailJob;
 
+
 class UserAuthController extends Controller{
 
 
@@ -260,5 +261,9 @@ class UserAuthController extends Controller{
                 //重新導向原先使用者造訪網頁 沒有嘗試造訪業則重新導向回首頁
                 return redirect()->intended('/');
             }
+        }
+
+        public function test(){
+            return User::all();
         }
 }

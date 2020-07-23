@@ -17,6 +17,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/usertest', 'UserAuthController@test');
-
-Route::get('/test', 'MerchandiseController@test');
+//Route::get('/test', 'UserAuthController@test');

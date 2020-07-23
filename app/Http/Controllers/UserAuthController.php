@@ -263,7 +263,7 @@ class UserAuthController extends Controller{
             }
         }
 
-        public function test(){
+        /*public function test(){
             return User::all();
-        }
+        }*/
 }

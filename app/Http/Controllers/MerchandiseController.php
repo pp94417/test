@@ -289,8 +289,4 @@ class MerchandiseController extends Controller {
         }
     }
 
-    public function test(){
-        return Merchandise::all();
-    }
-
 }

@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use DB; //使用資料庫物件
+use Hash;   //雜湊(密碼加密)
+use Mail;
+use JWTAuth;
+use Socialite;
 use Validator;    //使用驗證器
 use App\Shop\Entity\User;   //使用者 Eloquen ORM Model
-use Hash;   //雜湊(密碼加密)
-use DB; //使用資料庫物件
-use Mail;
-use Socialite;
+use Illuminate\Http\Request;
 use App\Jobs\SendSignUpMailJob;
+use App\Http\Controllers\Controller;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 
 class UserAuthController extends Controller{
@@ -17,7 +20,6 @@ class UserAuthController extends Controller{
 
     //註冊頁
     public function singUpPage(){
-
          $binding = [
             'title' => '註冊',
         ];
@@ -26,16 +28,17 @@ class UserAuthController extends Controller{
     }
 
      //處理註冊資料
-     public function singUpProcess(){
+     public function singUpProcess(Request $request){
         
         //接收註冊資料
-        $input = request()->all();
+        //$input = request()->all();
 
         /*var_dump($input);
         exit;*/
 
         //驗證規則
-        $rules = [
+        //$rules
+        $userdata = $request->validate([
             //暱稱
             'nickname'=> [
                 'required',
@@ -63,10 +66,12 @@ class UserAuthController extends Controller{
                 'required',
                 'in:G,A',   //限定資料只能為G及A
             ],
-        ];
+        ]);
+
+        $userdata['password'] = bcrypt($request->password);
 
         //驗證資料
-        $validator = Validator::make($input, $rules);
+        /*$validator = Validator::make($input, $rules);
 
         if ($validator->fails()){
             //資料驗證錯誤
@@ -77,14 +82,14 @@ class UserAuthController extends Controller{
         //密碼加密 
         $input['password'] = Hash::make($input['password']); //會使用.evn中的APP_KEY當作密鑰進行加密
                                                             //php artisan key:generate隨時產生新密鑰
-        
+        */
         //新增會員資料
-        $Users = User::create($input);
+        $Users = User::create($userdata);
 
         //寄送註冊通知信
-        $mail_binding=[
+        /*$mail_binding=[
             'nickname'=>$input['nickname']
-        ];
+        ];*/
 
         /*Mail::send('email.singUpEmailNotification', $mail_binding,
         function($mail) use ($input){
@@ -96,7 +101,8 @@ class UserAuthController extends Controller{
             $mail->subject('恭喜註冊成功');
         });*/
         //SendSignUpMailJob::dispatch($mail_binding);
-        return redirect('/user/auth/sing-in');
+        return response()->json(['user' => $Users]);
+                //->redirect('/user/auth/sing-in');
 
     }
 
@@ -263,7 +269,7 @@ class UserAuthController extends Controller{
             }
         }
 
-        /*public function test(){
+        public function showdata(){
             return User::all();
-        }*/
+        }
 }

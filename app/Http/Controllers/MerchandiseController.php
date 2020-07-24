@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Shop\Entity\Merchandise;
 use App\Shop\Entity\Transaction;
 use App\Shop\Entity\User;
@@ -13,10 +14,10 @@ use Validator;
 class MerchandiseController extends Controller {
 
     //新增商品
-    public function merchandiseCreatProcess(){
+    public function merchandiseCreatProcess(Request $request){
 
         //建立商品基本資訊
-        $merchandise_data = [
+        /*$merchandise_data = [
             'status'            =>  'C',    //建立中
             'name'              =>  'aaa',     //商品名稱
             'name_en'           =>  'aaa_en',     //商品英文名稱
@@ -28,7 +29,21 @@ class MerchandiseController extends Controller {
         ];
         $Merchandise = Merchandise::create($merchandise_data);
 
-        return redirect('/merchandise/'.$Merchandise->id.'/edit');
+        return redirect('/merchandise/'.$Merchandise->id.'/edit');*/
+
+        $mdata = $request->validate([
+            'status'            => 'required',
+            'name'              =>  'required',
+            'introduction'      =>  'required',
+            'introduction_en'   =>  'required',
+            'price'             =>  'required',
+            'remain_count'      =>  'required',
+        ]);
+
+        $Merchandise = Merchandise::create($mdata);
+
+        return response(['data' => $Merchandise]);
+        
     }
 
     public function merchandiseItemEditPage($merchandise_id){

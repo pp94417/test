@@ -18,6 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/sing-up', 'UserAuthController@singUpProcess');
+Route::post('/sing-in', 'UserAuthController@singInProcess');
 Route::post('/create', 'MerchandiseController@merchandiseCreatProcess');
 
 Route::post('/test', 'UserAuthController@showdata');

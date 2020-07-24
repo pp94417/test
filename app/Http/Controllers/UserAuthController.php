@@ -86,6 +86,8 @@ class UserAuthController extends Controller{
         //新增會員資料
         $Users = User::create($userdata);
 
+        $token = JWTAuth::fromUser($Users);
+
         //寄送註冊通知信
         /*$mail_binding=[
             'nickname'=>$input['nickname']
@@ -101,7 +103,7 @@ class UserAuthController extends Controller{
             $mail->subject('恭喜註冊成功');
         });*/
         //SendSignUpMailJob::dispatch($mail_binding);
-        return response()->json(['user' => $Users]);
+        return response()->json(['user' => $Users, 'token' => $token]);
                 //->redirect('/user/auth/sing-in');
 
     }
@@ -115,10 +117,10 @@ class UserAuthController extends Controller{
         }
         
         //處理登入資料
-        public function singInProcess(){
+        public function singInProcess(Request $request){
                     
             //接收註冊資料
-            $input = request()->all();
+            /*$input = request()->all();
 
             //驗證規則
             $rules = [
@@ -159,7 +161,7 @@ class UserAuthController extends Controller{
             exit;*/
 
             //檢查密碼是否正確
-            $is_password_correct = Hash::check($input['password'], $User->password);
+            /*$is_password_correct = Hash::check($input['password'], $User->password);
 
             if(!$is_password_correct){
                 //密碼錯誤回傳錯誤訊息
@@ -174,10 +176,24 @@ class UserAuthController extends Controller{
             }
 
             //session 紀錄會員編號
-            session()->put('user_id', $User->id);
+            session()->put('user_id', $User->id);*/
+
+            $credentials = $request->only('email', 'password');
+
+            if (! $token = JWTAuth::attempt($credentials)) {
+                $error_massage = [
+                    'msg' => [
+                        '帳號或密碼錯誤',
+                    ],
+                ];
+                return redirect('/user/auth/sing-in')
+                    ->withErrors($error_massage)
+                    ->withInput();
+            }
 
             //重新導向回到原先使用者造訪網頁 沒有嘗試造訪頁則重新導向回首頁
-            return redirect()->intended('/merchandise');
+            return response(compact('token'));
+                    //redirect()->intended('/merchandise');
         }
 
         //處理登出資料

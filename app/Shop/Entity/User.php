@@ -5,8 +5,9 @@
 namespace App\Shop\Entity;
 
 use Illuminate\Database\Eloquent\Model;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Model{
+class User extends Model implements JWTSubject{
     //資料表名稱
     protected $table = 'users';
 
@@ -21,5 +22,13 @@ class User extends Model{
         "nickname",
     ];
 
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
 
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }

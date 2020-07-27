@@ -47,4 +47,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+    
+    //一個使用者(user)對應多個活動(tasks)
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }

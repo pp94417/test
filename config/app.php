@@ -240,10 +240,6 @@ return [
 
         //FB
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-
-        //JWT
-        'JWTAuth' => 'Tymon\JWTAuth\Facades\JWTAuth',
-        'JWTFactory' => 'Tymon\JWTAuth\Facades\JWTFactory',
     ],
 
 ];

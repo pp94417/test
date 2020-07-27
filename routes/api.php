@@ -22,3 +22,11 @@ Route::post('/sing-in', 'UserAuthController@singInProcess');
 Route::post('/create', 'MerchandiseController@merchandiseCreatProcess');
 
 Route::post('/test', 'UserAuthController@showdata');
+
+Route::group(['middleware' => 'auth.jwt'], function () {
+    Route::get('/tasks', 'TaskController@index');
+    Route::get('/tasks/{id}', 'TaskController@show');
+    Route::post('/tasks', 'TaskController@store');
+    Route::put('/tasks/{id}', 'TaskController@update');
+    Route::delete('/tasks/{id}', 'TaskController@destroy');
+});
